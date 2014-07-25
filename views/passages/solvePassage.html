@@ -1,0 +1,29 @@
+{{extend 'layout.html'}}
+<form action="" method="post" onsubmit="return check()">
+
+	<div class="CSSTableGenerator">
+		<table>
+			<tr>
+				<td>Passage</td>
+				<td>Questions<br /> Time Elapsed : 00:00
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div style="overflow: auto; height: 500px">
+					{{=passageContent}}
+					</div>
+				</td>
+				<td>
+					<div style="overflow: auto; height: 500px">
+					{{=XML(questionContent)}}
+		<br /> <br />
+</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="SubmitButton">
+		<input type="submit" value="Submit" />
+	</div>
+</form>

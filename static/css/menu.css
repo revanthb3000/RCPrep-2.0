@@ -1,0 +1,54 @@
+#cssmenu ul {
+	list-style-type: none;
+	width: auto;
+	position: relative;
+	display: block;
+	height: 33px;
+	font-size: .6em;
+	background: -o-linear-gradient(bottom, #003f7f 5%, #005fbf 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #003f7f
+		), color-stop(1, #005fbf));
+	background: -moz-linear-gradient(center top, #003f7f 5%, #005fbf 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#005fbf",
+		endColorstr="#003f7f");
+	background: -o-linear-gradient(top, #005fbf, 003f7f);
+	font-size: 12px;
+	font-family: Arial;
+	border: 1px solid #000;
+	margin: 0;
+	padding: 0;
+}
+
+#cssmenu li {
+	display: block;
+	float: left;
+	margin: 0;
+	padding: 0;
+}
+
+#cssmenu li a {
+	float: left;
+	color: #FFFFFF;
+	text-decoration: none;
+	height: 24px;
+	padding: 9px 15px 0;
+	font-weight: normal;
+}
+
+#cssmenu li a:hover,#cssmenu .active {
+	color: #fff;
+	text-decoration: none;
+}
+
+#cssmenu .active a {
+	color: #fff;
+	font-weight: 700;
+}
+
+#cssmenu ul {
+	background-color: #B11718;
+}
+
+#cssmenu li a:hover,#cssmenu li.active {
+	background-color: #00AF50;
+}

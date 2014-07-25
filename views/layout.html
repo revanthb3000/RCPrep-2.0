@@ -46,11 +46,13 @@
   response.files.insert(2,URL('static','css/bootstrap-responsive.min.css'))
   response.files.insert(3,URL('static','css/web2py_bootstrap.css'))
   response.files.insert(4,URL('static','css/customstyles.css'))
+  response.files.insert(5,URL('static','css/menu.css'))
+  response.files.insert(6,URL('static','css/result.css'))
+  response.files.insert(7,URL('static','css/table.css'))
   }}
 
   {{include 'web2py_ajax.html'}}
   
-  {{include 'footer.html'}}
 
   {{
   # using sidebars need to know what sidebar you want to use
@@ -95,7 +97,7 @@
   <div class="container">
     <!-- Masthead ================================================== -->
     <header class="mastheader row" id="header">
-      {{if response.title:}}
+      {{if ((response.title) and (response.ignoreHeading!=True)):}}
         <div class="span12">
             <div class="page-header">
                 <h1>
