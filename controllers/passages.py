@@ -43,10 +43,27 @@ def solvePassage():
     return dict(form = form, passageId = passageId, startTime = startTime, passageContent = passageContent, questionContent = questionContent)
 
 def passageResults():
+    response.view = 'passages/passageResults.html'
+    response.title = "Results"
+    
     passageId = request.vars.passageId
     if(not(utilityFunctions.checkIfVariableIsInt(passageId))):
         redirect(URL('passages','solvePassage'))
-        
-    print request.vars
 
-    return dict()
+    startTime = datetime.datetime.strptime(str(request.vars.startTime),'%Y-%m-%d %H:%M:%S.%f')
+    curTime = datetime.datetime.now()
+    elapsedTime = curTime - startTime
+    elapsedTimeStr = str(elapsedTime)
+    elapsedTimeStr = str(elapsedTimeStr.split(":")[1]) + ":" + str(elapsedTimeStr.split(":")[2].split(".")[0])
+    
+    numberOfQuestions = databaseQueries.getNumberOfQuestions(db, passageId)
+    answers = []
+    for i in range(1, numberOfQuestions + 1):
+        questionId = "question-" + str(i)
+        answers += [request.vars[questionId]]
+
+    passageContent = databaseQueries.getPassage(db, passageId)
+    questionContent = utilityFunctions.getResultsReviewHTMLCode(db, passageId, answers)
+    resultsContent = utilityFunctions.getResultsHTMLCode(db, passageId, answers)
+
+    return dict(passageContent = passageContent, questionContent = questionContent, resultsContent = resultsContent, elapsedTime = elapsedTimeStr)

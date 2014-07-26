@@ -1,0 +1,41 @@
+{{extend 'layout.html'}}
+
+<div align="center">
+{{=XML(resultsContent)}}
+</div>
+
+
+<div class="CSSTableGenerator">
+	<table>
+		<tr>
+			<td>Passage</td>
+			<td>Questions
+			<div id="timeTaken">Time Taken : {{=elapsedTime}}</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div style="overflow: auto; height: 500px">
+				{{=XML(passageContent)}}
+				</div>
+			</td>
+			<td>
+				<div style="overflow: auto; height: 500px">
+				{{=XML(questionContent)}}
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<br/><br/>
+
+<div align='center'>
+	<font style='BACKGROUND-COLOR: #ED534F'>  &nbsp &nbsp </font>&nbsp - represents your answer which was wrong.<br/>
+	<font style='BACKGROUND-COLOR: #73D549'>  &nbsp &nbsp  </font> &nbsp - represents your answer which was correct.<br/>
+	<font style='BACKGROUND-COLOR: #F7E259'>  &nbsp &nbsp </font> &nbsp - represents the correct answer.<br/>
+	<br/>
+	<div class="SmallButton">
+		<a href="{{=URL('passages','solvePassage')}}" >Click here to solve another passage</a>
+	</div>
+</div>
