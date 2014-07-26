@@ -1,0 +1,63 @@
+{{right_sidebar_enabled=True}}
+{{extend 'layout.html'}}
+{{import utilityFunctions}}
+
+<table>
+	<tr>
+		<td width="50%">
+			<p><b>Sex :</b> {{=userInfo.Gender}}</p>
+			{{
+				birthday = str(userInfo.Birthday.day) + "-" + utilityFunctions.getMonthName(userInfo.timeOfJoining.month) + "-" + str(userInfo.timeOfJoining.year)
+			}}
+			<p><b>Birthday :</b> {{=birthday}}</p>
+			{{if(userInfo.Location!=""):}}
+				<p><b>Location :</b> {{=userInfo.Location}}</p>
+			{{pass}}
+		</td>
+		
+		<td>
+			{{if(userInfo.Occupation!=""):}}
+				<p><b>Occupation :</b> {{=userInfo.Occupation}}</p>
+			{{pass}}
+			{{if(userInfo.Website!=""):}}
+				<p><b>My Website :</b> {{=userInfo.Website}}</p>
+			{{pass}}
+			<p><b>Email ID :</b> {{=userInfo.email}}</p>	
+		</td>
+		
+	</tr>
+</table>
+
+{{
+	if(userInfo.AboutMe.strip()!=""):
+}}
+	<p><b>About Me :</b></p>
+	<p>{{=userInfo.AboutMe}}</p>
+{{pass}}
+
+{{block right_sidebar}}
+{{=IMG(_src=profilePicLink, _alt="DP",_width="200px",_height="200px")}}
+<br/>
+<br/>
+{{
+if (followURL!=""):
+	}}
+	<a href='#' onclick="changeFollowStatus('{{=followURL}}')">
+
+	{{
+	    if(isFollowing):
+	    	=IMG(_src=URL('static','images/unfollow.png'), _alt="Unfollow", _id="FollowActionImage")
+    	else:
+    		=IMG(_src=URL('static','images/follow.png'), _alt="Follow", _id="FollowActionImage")
+    pass
+    }}
+
+	</a>
+    {{
+pass
+}}
+<i id="followerCount">({{=numberOfFollowers}} Follower{{="s" if (numberOfFollowers!=1) else ""}})</i>
+<br/>
+<br/>
+<a href="{{=URL('takes','userActivityFeed',vars=dict(userId = userInfo.id))}}">My Activity</a>
+{{end}}

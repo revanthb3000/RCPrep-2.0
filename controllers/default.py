@@ -14,8 +14,9 @@ import datetime
 
 def index():
     response.view = 'default/index.html'
-    curDate = datetime.datetime.now()
-    return dict(year = curDate.year)
+    if(auth.is_logged_in()):
+        redirect(URL('passages','solvePassage'))
+    return dict()
 
 
 def user():

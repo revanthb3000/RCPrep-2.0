@@ -30,10 +30,6 @@ def register():
     response.view = 'users/register.html'
     response.title = 'Registration'
     
-    db.auth_user["AboutMe"].readable = db.auth_user["AboutMe"].writable = False
-    db.auth_user["Location"].readable = db.auth_user["Location"].writable = False
-    db.auth_user["Occupation"].readable = db.auth_user["Occupation"].writable = False
-    db.auth_user["Website"].readable = db.auth_user["Website"].writable = False
     db.auth_user["timeOfJoining"].readable = db.auth_user["timeOfJoining"].writable = False
     
     form = auth.register()
