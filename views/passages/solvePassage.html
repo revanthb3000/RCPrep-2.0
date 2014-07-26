@@ -1,29 +1,58 @@
 {{extend 'layout.html'}}
-<form action="" method="post" onsubmit="return check()">
 
+{{=form.custom.begin}}
+<input name="passageId" type="hidden" value="{{=passageId}}"/>
+<input name="startTime" type="hidden" value="{{=startTime}}"/>
 	<div class="CSSTableGenerator">
 		<table>
 			<tr>
 				<td>Passage</td>
-				<td>Questions<br /> Time Elapsed : 00:00
+				<td>Questions
+				<div id="timeElapsed">Time Elapsed : 00:00</div>
 				</td>
 			</tr>
 			<tr>
 				<td>
 					<div style="overflow: auto; height: 500px">
-					{{=passageContent}}
+					{{=XML(passageContent)}}
 					</div>
 				</td>
 				<td>
 					<div style="overflow: auto; height: 500px">
 					{{=XML(questionContent)}}
-		<br /> <br />
-</div>
+					</div>
 				</td>
 			</tr>
 		</table>
 	</div>
 	<div class="SubmitButton">
-		<input type="submit" value="Submit" />
+		{{=form.custom.submit}}
 	</div>
-</form>
+
+
+{{=form.custom.end}}
+
+<script type="text/javascript">
+var timeElapsed = document.getElementById("timeElapsed");
+var totalSeconds = 0;
+setInterval(setTime, 1000);
+
+function setTime()
+{
+	++totalSeconds;
+	timeElapsed.innerHTML = "Time Elapsed : " + pad(parseInt(totalSeconds/60)) + ":" + pad(totalSeconds%60);
+}
+
+function pad(val)
+{
+	var valString = val + "";
+	if(valString.length < 2)
+	{
+		return "0" + valString;
+	}
+	else
+	{
+		return valString;
+	}
+}
+</script>

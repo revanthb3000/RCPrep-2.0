@@ -12,4 +12,50 @@ if 0:
 import databaseConnectionStrings
 import datetime
 
-def index(): return dict(message="hello from users.py")
+def index():
+    redirect(URL('default','index'))
+    return dict()
+
+def login():
+    if(auth.is_logged_in()):
+        redirect(URL('default','index'))
+    response.view = 'users/login.html'
+    response.title = 'Login'
+    form = auth.login()
+    return dict(form=form)
+
+def register():
+    if(auth.is_logged_in()):
+        redirect(URL('default','index'))
+    response.view = 'users/register.html'
+    response.title = 'Registration'
+    
+    db.auth_user["AboutMe"].readable = db.auth_user["AboutMe"].writable = False
+    db.auth_user["Location"].readable = db.auth_user["Location"].writable = False
+    db.auth_user["Occupation"].readable = db.auth_user["Occupation"].writable = False
+    db.auth_user["Website"].readable = db.auth_user["Website"].writable = False
+    db.auth_user["timeOfJoining"].readable = db.auth_user["timeOfJoining"].writable = False
+    
+    form = auth.register()
+    return dict(form=form)
+
+@auth.requires_login()
+def changePassword():
+    response.view = 'users/changepassword.html'
+    response.title = 'Change Password'
+    form = auth.change_password()
+    return dict(form=form)
+
+def retrievePassword():
+    if(auth.is_logged_in()):
+        redirect(URL('default','index'))
+    response.view = 'users/retrievepassword.html'
+    response.title = 'Retrieve Password'
+    form = auth.retrieve_password()
+    return dict(form = form)
+
+def logout():
+    if(auth.is_logged_in()):
+        auth.logout()
+    redirect(URL('default','index'))
+    return dict()

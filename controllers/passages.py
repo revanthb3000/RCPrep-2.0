@@ -1,5 +1,4 @@
-#Dead code to get intellisense to work.
-from applications.HereIsMyTake.modules import utilityFunctions
+#Dead code to get intellisense to 
 if 0:
     from modules import *
     from gluon import *
@@ -11,9 +10,12 @@ if 0:
     crud = Crud()
 
 import databaseConnectionStrings
+import utilityFunctions
 import datetime
 
-def index(): return dict(message="hello from passages.py")
+def index(): 
+    redirect(URL('passages','solvePassage'))
+    return dict()
 
 def solvePassage():
     response.view = 'passages/solvePassage.html'
@@ -21,26 +23,30 @@ def solvePassage():
     response.ignoreHeading = True
     
     passageId = request.vars.passageId
-    passageContent = ""
-    questionContent = ""
     if(not(utilityFunctions.checkIfVariableIsInt(passageId))):
-        passageId = 5
-        passageContent = databaseQueries.getPassage(db, passageId)
-        #Generate random Passage
-    else:
-        passageContent = databaseQueries.getPassage(db, passageId)
-        questions = databaseQueries.getQuestions(db, passageId)
-        count = 1
-        for question in questions:
-            questionContent += str(count) + "."
-            questionContent += question.question + "<br/>"
-            questionContent += "A) " + (question.optionA if question.optionA!="" else "---") + "<br/>"
-            questionContent += "B) " + (question.optionB if question.optionB!="" else "---") + "<br/>"
-            questionContent += "C) " + (question.optionC if question.optionC!="" else "---") + "<br/>"
-            questionContent += "D) " + (question.optionD if question.optionD!="" else "---") + "<br/>"
-            questionContent += "E) " + (question.optionE if question.optionE!="" else "---") + "<br/>"
-            questionContent += "Answer : Option " + question.answer + "<br/><br/>"
-            count += 1
-        #Generate passage with id = passageId
-    
-    return dict(passageContent = passageContent, questionContent = questionContent)
+        numberOfPassages = databaseQueries.getNumberOfPassages(db)
+        passageId = utilityFunctions.getRandomNumber(1, numberOfPassages)
+
+    passageContent = databaseQueries.getPassage(db, passageId)
+    questionContent = utilityFunctions.getQuestionsHTMLCode(db, passageId)
+    numberOfQuestions = databaseQueries.getNumberOfQuestions(db, passageId)
+    fields = []
+    fields += [Field("startTime", 'datetime')]
+    fields += [Field("passageId", 'string')]
+    for i in range(1, numberOfQuestions + 1):
+        questionNumber = "question-" + str(i)
+        fields += [Field(questionNumber,'string')]
+
+    form = SQLFORM.factory(*fields, _action = URL('passages','passageResults'))
+
+    startTime = datetime.datetime.now()
+    return dict(form = form, passageId = passageId, startTime = startTime, passageContent = passageContent, questionContent = questionContent)
+
+def passageResults():
+    passageId = request.vars.passageId
+    if(not(utilityFunctions.checkIfVariableIsInt(passageId))):
+        redirect(URL('passages','solvePassage'))
+        
+    print request.vars
+
+    return dict()

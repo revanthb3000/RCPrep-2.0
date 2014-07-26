@@ -30,3 +30,11 @@ def getPassage(db, passageId):
 def getQuestions(db, passageId):
     rows = db(db.questions.passageId == passageId).select()
     return rows
+
+def getNumberOfPassages(db):
+    rows = db(db.passages.id != 0).select()
+    return len(rows)
+
+def getNumberOfQuestions(db, passageId):
+    rows = db(db.questions.passageId == passageId).select()
+    return len(rows)
