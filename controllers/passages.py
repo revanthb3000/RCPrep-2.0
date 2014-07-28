@@ -45,6 +45,7 @@ def solvePassage():
 def passageResults():
     response.view = 'passages/passageResults.html'
     response.title = "Results"
+    userId = (auth.user.id) if (auth.is_logged_in()) else 0
     
     passageId = request.vars.passageId
     if(not(utilityFunctions.checkIfVariableIsInt(passageId))):
@@ -65,5 +66,71 @@ def passageResults():
     passageContent = databaseQueries.getPassage(db, passageId)
     questionContent = utilityFunctions.getResultsReviewHTMLCode(db, passageId, answers)
     resultsContent = utilityFunctions.getResultsHTMLCode(db, passageId, answers)
+    utilityFunctions.updateStats(db, passageId, userId, elapsedTime.seconds, answers)
 
     return dict(passageContent = passageContent, questionContent = questionContent, resultsContent = resultsContent, elapsedTime = elapsedTimeStr)
+
+@auth.requires_login()
+def submitPassage():
+    response.html = "passages/submitPassage.html"
+    response.title = "Submit Passage"
+    firstQuestionHtmlCode = utilityFunctions.getQuestionInputHtmlCode(1)
+    loadNewQuestionUrl = URL('ajax','getQuestionCode',vars=dict(questionNumber = "replaceMEQuestionNumber"))
+    return dict(firstQuestionHtmlCode = firstQuestionHtmlCode, loadNewQuestionUrl = loadNewQuestionUrl)
+
+@auth.requires_login()
+def confirmPassage():
+    response.html = "passages/confirmPassage.html"
+    response.title = "Confirm Passage"
+    passageContent = str(request.vars.passage)
+    passageContent = passageContent[3:] #Gets rid of the <p> tag
+    passageContent = passageContent[:-4] #Gets rid of the </p> tag
+    numOfQuestions = int(request.vars.num_questions)
+    questionContent = ""
+    questionContent += "<input type='hidden' name='passage' value='"+passageContent+"'/>\n"
+    questionContent += "<input type='hidden' name='num_questions' value='"+str(numOfQuestions)+"'/>\n"
+    for i in range(1, numOfQuestions + 1):
+        question = str(request.vars["question" + str(i)])
+        if(question.strip()==""):
+            continue
+        optionA = str(request.vars["A" + str(i)])
+        optionB = str(request.vars["B" + str(i)])
+        optionC = str(request.vars["C" + str(i)])
+        optionD = str(request.vars["D" + str(i)])
+        optionE = str(request.vars["E" + str(i)])
+        answer = str(request.vars["answer" + str(i)])
+        questionContent += str(i) + ". " + question + "<br/>\n"
+        questionContent += "<input type='hidden' name='question" + str(i) + "' value='"+question+"'/>\n"
+        questionContent += "<b>(A)</b> " + optionA + "<br/>\n"
+        questionContent += "<input type='hidden' name='A" + str(i) + "' value='"+optionA+"'/>\n"
+        questionContent += "<b>(B)</b> " + optionB + "<br/>\n"
+        questionContent += "<input type='hidden' name='B" + str(i) + "' value='"+optionB+"'/>\n"
+        questionContent += "<b>(C)</b> " + optionC + "<br/>\n"
+        questionContent += "<input type='hidden' name='C" + str(i) + "' value='"+optionC+"'/>\n"
+        questionContent += "<b>(D)</b> " + optionD + "<br/>\n"
+        questionContent += "<input type='hidden' name='D" + str(i) + "' value='"+optionD+"'/>\n"
+        questionContent += "<b>(E)</b> " + optionE + "<br/>\n"
+        questionContent += "<input type='hidden' name='E" + str(i) + "' value='"+optionE+"'/>\n"
+        questionContent += "Answer is : <b>" + answer + "</b><br/><br/>\n"
+        questionContent += "<input type='hidden' name='answer" + str(i) + "' value='"+answer+"'/>\n"
+
+    return dict(passageContent = passageContent, questionContent = questionContent)
+
+@auth.requires_login()
+def acceptPassage():
+    passageContent = str(request.vars.passage)
+    numOfQuestions = int(request.vars.num_questions)
+    passageId = databaseQueries.addPassage(db, passageContent)
+    for i in range(1, numOfQuestions + 1):
+        question = str(request.vars["question" + str(i)])
+        if(question.strip()==""):
+            continue
+        optionA = str(request.vars["A" + str(i)])
+        optionB = str(request.vars["B" + str(i)])
+        optionC = str(request.vars["C" + str(i)])
+        optionD = str(request.vars["D" + str(i)])
+        optionE = str(request.vars["E" + str(i)])
+        answer = str(request.vars["answer" + str(i)])
+        databaseQueries.addQuestion(db, passageId, question, optionA, optionB, optionC, optionD, optionE, answer)
+    redirect(URL('passages','solvePassage',vars=dict(passageId = passageId)))
+    return dict()

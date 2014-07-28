@@ -1,0 +1,64 @@
+{{extend 'layout.html'}}
+
+<script src="{{=URL('static','ckeditor/ckeditor.js')}}"></script>
+
+<script type="text/javascript">
+	function addQuestion() {
+		ajaxUrl = "{{=XML(loadNewQuestionUrl)}}"
+		element = document.getElementById("num_questions");
+		numOfQuestions = parseInt(element.value);
+		numOfQuestions += 1;
+		element.value = numOfQuestions;
+		ajaxUrl = ajaxUrl.replace('replaceMEQuestionNumber',numOfQuestions)
+		loadArticle(ajaxUrl)
+	}
+
+	function loadArticle(ajaxUrl) {
+		$.ajax({
+			url : ajaxUrl,
+			type : 'POST',
+			data : "",
+			success : function(html) {
+				$("#questions").append(html);
+			}
+		});
+		return false;
+	}
+</script>
+
+<form action="{{=URL('passages','confirmPassage')}}" method="post">
+	<div class="CSSTableGenerator">
+		<table>
+			<tr>
+				<td>Passage</td>
+				<td>Questions</td>
+			</tr>
+			<tr>
+				<td>
+					<div style="overflow: auto; height: 500px;" >
+			            <textarea name="passage" id="passageEditor" rows="10">
+			            </textarea>
+			            <script>
+			            CKEDITOR.replace( 'passageEditor', {
+			                height : '460px',
+			                contentsCss : "{{=URL('static','css/editorContent.css')}}"
+			            });
+			            </script>
+					</div>
+				</td>
+				<td>
+					<input type='hidden' value=1 name='num_questions' id='num_questions'/>
+					<div id="questions" style="overflow: auto; height: 500px">
+						{{=XML(firstQuestionHtmlCode)}}
+					</div>
+					<div align='center'>
+						<a onclick="addQuestion()">Add another question</a>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="SubmitButton">
+	<input type="submit" value="Submit Passage"/>
+	</div>
+</form>

@@ -1,0 +1,27 @@
+{{extend 'layout.html'}}
+
+<form action="{{=URL('passages','acceptPassage')}}" method="post">
+	<div class="CSSTableGenerator">
+		<table>
+			<tr>
+				<td>Passage</td>
+				<td>Questions</td>
+			</tr>
+			<tr>
+				<td>
+					<div style="overflow: auto; height: 500px">
+					{{=XML(passageContent)}}
+					</div>
+				</td>
+				<td>
+					<div style="overflow: auto; height: 500px">
+					{{=XML(questionContent)}}
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="SubmitButton">
+		<input type="submit" value="Confirm Passage"/>
+	</div>
+</form>
