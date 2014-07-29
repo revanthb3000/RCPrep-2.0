@@ -37,6 +37,7 @@
 				<td>
 					<div style="overflow: auto; height: 500px;" >
 			            <textarea name="passage" id="passageEditor" rows="10">
+			            {{=passageContent}}
 			            </textarea>
 			            <script>
 			            CKEDITOR.replace( 'passageEditor', {
@@ -47,7 +48,7 @@
 					</div>
 				</td>
 				<td>
-					<input type='hidden' value=1 name='num_questions' id='num_questions'/>
+					<input type='hidden' value={{=numOfQuestions}} name='num_questions' id='num_questions'/>
 					<div id="questions" style="overflow: auto; height: 500px">
 						{{=XML(firstQuestionHtmlCode)}}
 					</div>

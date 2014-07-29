@@ -74,9 +74,31 @@ def passageResults():
 def submitPassage():
     response.html = "passages/submitPassage.html"
     response.title = "Submit Passage"
-    firstQuestionHtmlCode = utilityFunctions.getQuestionInputHtmlCode(1)
-    loadNewQuestionUrl = URL('ajax','getQuestionCode',vars=dict(questionNumber = "replaceMEQuestionNumber"))
-    return dict(firstQuestionHtmlCode = firstQuestionHtmlCode, loadNewQuestionUrl = loadNewQuestionUrl)
+    passageContent = ""
+    questionHTMLCode = ""
+    numOfQuestions = 1
+    loadNewQuestionUrl = URL('ajax','getQuestionCode',vars=dict(questionNumber = "replaceMEQuestionNumber"
+                                                                , question = "", optionA = ""
+                                                                , optionB = "", optionC = "", optionD = ""
+                                                                , optionE = "", answer = ""))
+    if(request.vars.passage == None):
+        questionHTMLCode = utilityFunctions.getQuestionInputHtmlCode(1, "", "", "", "", "", "", "")
+    else:
+        passageContent = str(request.vars.passage)
+        numOfQuestions = int(request.vars.num_questions)
+        for i in range(1, numOfQuestions + 1):
+            question = str(request.vars["question" + str(i)])
+            if(question.strip()==""):
+                continue
+            optionA = str(request.vars["A" + str(i)])
+            optionB = str(request.vars["B" + str(i)])
+            optionC = str(request.vars["C" + str(i)])
+            optionD = str(request.vars["D" + str(i)])
+            optionE = str(request.vars["E" + str(i)])
+            answer = str(request.vars["answer" + str(i)])
+            questionHTMLCode += utilityFunctions.getQuestionInputHtmlCode(i, question, optionA, optionB, optionC, optionD, optionE, answer)
+
+    return dict(firstQuestionHtmlCode = questionHTMLCode, loadNewQuestionUrl = loadNewQuestionUrl, passageContent = passageContent, numOfQuestions = numOfQuestions)
 
 @auth.requires_login()
 def confirmPassage():
@@ -87,12 +109,14 @@ def confirmPassage():
     passageContent = passageContent[:-4] #Gets rid of the </p> tag
     numOfQuestions = int(request.vars.num_questions)
     questionContent = ""
-    questionContent += "<input type='hidden' name='passage' value='"+passageContent+"'/>\n"
-    questionContent += "<input type='hidden' name='num_questions' value='"+str(numOfQuestions)+"'/>\n"
+    formInputContent = ""
+    formInputContent += "<input type='hidden' name='passage' value='"+passageContent+"'/>\n"
+    goodQuestionCount = 0
     for i in range(1, numOfQuestions + 1):
         question = str(request.vars["question" + str(i)])
         if(question.strip()==""):
             continue
+        goodQuestionCount += 1
         optionA = str(request.vars["A" + str(i)])
         optionB = str(request.vars["B" + str(i)])
         optionC = str(request.vars["C" + str(i)])
@@ -100,27 +124,32 @@ def confirmPassage():
         optionE = str(request.vars["E" + str(i)])
         answer = str(request.vars["answer" + str(i)])
         questionContent += str(i) + ". " + question + "<br/>\n"
-        questionContent += "<input type='hidden' name='question" + str(i) + "' value='"+question+"'/>\n"
         questionContent += "<b>(A)</b> " + optionA + "<br/>\n"
-        questionContent += "<input type='hidden' name='A" + str(i) + "' value='"+optionA+"'/>\n"
         questionContent += "<b>(B)</b> " + optionB + "<br/>\n"
-        questionContent += "<input type='hidden' name='B" + str(i) + "' value='"+optionB+"'/>\n"
         questionContent += "<b>(C)</b> " + optionC + "<br/>\n"
-        questionContent += "<input type='hidden' name='C" + str(i) + "' value='"+optionC+"'/>\n"
         questionContent += "<b>(D)</b> " + optionD + "<br/>\n"
-        questionContent += "<input type='hidden' name='D" + str(i) + "' value='"+optionD+"'/>\n"
         questionContent += "<b>(E)</b> " + optionE + "<br/>\n"
-        questionContent += "<input type='hidden' name='E" + str(i) + "' value='"+optionE+"'/>\n"
         questionContent += "Answer is : <b>" + answer + "</b><br/><br/>\n"
-        questionContent += "<input type='hidden' name='answer" + str(i) + "' value='"+answer+"'/>\n"
+        
+        formInputContent += "<input type='hidden' name='question" + str(i) + "' value='"+question+"'/>\n"
+        formInputContent += "<input type='hidden' name='A" + str(i) + "' value='"+optionA+"'/>\n"
+        formInputContent += "<input type='hidden' name='B" + str(i) + "' value='"+optionB+"'/>\n"
+        formInputContent += "<input type='hidden' name='C" + str(i) + "' value='"+optionC+"'/>\n"
+        formInputContent += "<input type='hidden' name='D" + str(i) + "' value='"+optionD+"'/>\n"
+        formInputContent += "<input type='hidden' name='E" + str(i) + "' value='"+optionE+"'/>\n"
+        formInputContent += "<input type='hidden' name='answer" + str(i) + "' value='"+answer+"'/>\n"
 
-    return dict(passageContent = passageContent, questionContent = questionContent)
+    formInputContent += "<input type='hidden' name='num_questions' value='"+str(goodQuestionCount)+"'/>\n"
+    
+    return dict(passageContent = passageContent, questionContent = questionContent, formInputContent = formInputContent)
 
 @auth.requires_login()
 def acceptPassage():
+    userId = auth.user.id
     passageContent = str(request.vars.passage)
     numOfQuestions = int(request.vars.num_questions)
     passageId = databaseQueries.addPassage(db, passageContent)
+    databaseQueries.insertUserPassageMapping(db, userId, passageId)
     for i in range(1, numOfQuestions + 1):
         question = str(request.vars["question" + str(i)])
         if(question.strip()==""):
@@ -134,3 +163,11 @@ def acceptPassage():
         databaseQueries.addQuestion(db, passageId, question, optionA, optionB, optionC, optionD, optionE, answer)
     redirect(URL('passages','solvePassage',vars=dict(passageId = passageId)))
     return dict()
+
+@auth.requires_login()
+def viewSubmittedPassages():
+    response.view = "passages/viewSubmittedPassages.html"
+    response.title = "View Your Passages"
+    userId = auth.user.id
+    submittedPassages = databaseQueries.getUserSubmittedPassages(db, userId)
+    return dict(submittedPassages = submittedPassages)

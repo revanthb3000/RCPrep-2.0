@@ -122,23 +122,22 @@ def updateStats(db, passageId, userId, timeTaken, answers):
         score += 1 if(correctAnswer == givenAnswer) else 0
         count += 1
     databaseQueries.insertPassageStats(db, passageId, userId, timeTaken, score)
-    
-    
-def getQuestionInputHtmlCode(questionNumber):
+        
+def getQuestionInputHtmlCode(questionNumber, question, optionA, optionB, optionC, optionD, optionE, answer):
     questionNumber = str(questionNumber)
     htmlCode = ""
-    htmlCode += "<textarea name='question" + questionNumber + "' style='width:93%;height:20px' placeholder=\"Q" + questionNumber + " : Enter the question here.\"></textarea>\n"
-    htmlCode += "<textarea name='A" + questionNumber + "' style='width:93%;height:20px' placeholder=\"Enter option A\"></textarea>\n"
-    htmlCode += "<textarea name='B" + questionNumber + "' style='width:93%;height:20px' placeholder=\"Enter option B\"></textarea>\n"
-    htmlCode += "<textarea name='C" + questionNumber + "' style='width:93%;height:20px' placeholder=\"Enter option C\"></textarea>\n"
-    htmlCode += "<textarea name='D" + questionNumber + "' style='width:93%;height:20px' placeholder=\"Enter option D\"></textarea>\n"
-    htmlCode += "<textarea name='E" + questionNumber + "' style='width:93%;height:20px' placeholder=\"Enter option E\"></textarea>\n"
+    htmlCode += "<textarea name='question" + questionNumber + "' style='width:93%;height:20px' placeholder=\"Q" + questionNumber + " : Enter the question here.\">"+question+"</textarea>\n"
+    htmlCode += "<textarea name='A" + questionNumber + "' style='width:93%;height:20px' placeholder=\"Enter option A\">"+optionA+"</textarea>\n"
+    htmlCode += "<textarea name='B" + questionNumber + "' style='width:93%;height:20px' placeholder=\"Enter option B\">"+optionB+"</textarea>\n"
+    htmlCode += "<textarea name='C" + questionNumber + "' style='width:93%;height:20px' placeholder=\"Enter option C\">"+optionC+"</textarea>\n"
+    htmlCode += "<textarea name='D" + questionNumber + "' style='width:93%;height:20px' placeholder=\"Enter option D\">"+optionD+"</textarea>\n"
+    htmlCode += "<textarea name='E" + questionNumber + "' style='width:93%;height:20px' placeholder=\"Enter option E\">"+optionE+"</textarea>\n"
     htmlCode += "Answer :\n"
     htmlCode += "<select name='answer" + questionNumber + "'>\n"
-    htmlCode += "<option value='A'>A</option>\n"
-    htmlCode += "<option value='B'>B</option>\n"
-    htmlCode += "<option value='C'>C</option>\n"
-    htmlCode += "<option value='D'>D</option>\n"
-    htmlCode += "<option value='E'>E</option>\n"
+    htmlCode += "<option value='A' " + ("selected" if(answer=="A") else "") + ">A</option>\n"
+    htmlCode += "<option value='B' " + ("selected" if(answer=="B") else "") + ">B</option>\n"
+    htmlCode += "<option value='C' " + ("selected" if(answer=="C") else "") + ">C</option>\n"
+    htmlCode += "<option value='D' " + ("selected" if(answer=="D") else "") + ">D</option>\n"
+    htmlCode += "<option value='E' " + ("selected" if(answer=="E") else "") + ">E</option>\n"
     htmlCode += "</select><br/><br/>\n"
     return htmlCode

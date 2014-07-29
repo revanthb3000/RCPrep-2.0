@@ -28,9 +28,13 @@ def defineDBTables(db, userId):
     
     db.define_table("submittedAnswers",
                         Field("id","integer"), Field("questionId","integer"),
-                        Field("userId","integer"), Field("givenAnswer","string"), #Time Taken is in seconds
+                        Field("userId","integer"), Field("givenAnswer","string"),
                         Field('timeOfSubmission','datetime',writable = False)
                     )
+    
+    db.define_table("authorPassageMapping",
+                        Field("id","integer"), Field("passageId","integer"),
+                        Field("userId","integer"),Field('timeOfSubmission','datetime',writable = False))
 
 """
 Given a passageId, this function returns the content of the passage.
@@ -88,3 +92,13 @@ This function is used to insert entries into the submittedAnswers table.
 """
 def insertAnswerStats(db, questionId, userId, givenAnswer):
     db.submittedAnswers.insert(questionId = questionId, userId = userId, givenAnswer = givenAnswer)
+    
+def insertUserPassageMapping(db, userId, passageId):
+    db.authorPassageMapping.insert(passageId = passageId, userId = userId)
+    
+def getUserSubmittedPassages(db, userId):
+    rows = db(db.authorPassageMapping.userId == userId).select()
+    passageIds = []
+    for row in rows:
+        passageIds.append(int(row.passageId))
+    return passageIds

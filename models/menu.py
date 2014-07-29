@@ -40,7 +40,7 @@ def _():
     response.menu += [
         (SPAN('Your Passages'), False, '', [
             (T('Submit Passage'), False, URL('passages','submitPassage')),
-            (T('View Submitted Passages'), False, URL('takes','generalFeed'))
+            (T('View Submitted Passages'), False, URL('passages','viewSubmittedPassages'))
         ]
      )]
 if DEVELOPMENT_MENU: _()

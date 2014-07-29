@@ -19,7 +19,14 @@ def index():
 
 def getQuestionCode():
     questionNumber = request.vars.questionNumber
+    question = str(request.vars.question)
+    optionA = str(request.vars.optionA)
+    optionB = str(request.vars.optionB)
+    optionC = str(request.vars.optionC)
+    optionD = str(request.vars.optionD)
+    optionE = str(request.vars.optionE)
+    answer = str(request.vars.answer)
     htmlCode = ""
     if(utilityFunctions.checkIfVariableIsInt(questionNumber)):
-        htmlCode = utilityFunctions.getQuestionInputHtmlCode(questionNumber)
+        htmlCode = utilityFunctions.getQuestionInputHtmlCode(questionNumber, question, optionA, optionB, optionC, optionD, optionE, answer)
     return htmlCode

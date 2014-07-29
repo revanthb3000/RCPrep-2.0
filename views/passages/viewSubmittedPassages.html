@@ -1,0 +1,13 @@
+{{extend 'layout.html'}}
+
+<div align='center'>
+	{{
+		i = 0
+		for passageId in submittedPassages:
+		i+=1
+	}}
+		<a href = "{{=URL('passages','solvePassage',vars=dict(passageId = passageId))}}">Passage #{{=i}}</a>
+	{{
+		pass
+	}}
+</div>

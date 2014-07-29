@@ -21,7 +21,15 @@
 			</tr>
 		</table>
 	</div>
+	{{=XML(formInputContent)}}
 	<div class="SubmitButton">
 		<input type="submit" value="Confirm Passage"/>
+	</div>
+</form>
+
+<form action="{{=URL('passages','submitPassage')}}" method="post">
+	{{=XML(formInputContent)}}
+	<div class="SubmitButton">
+		<input type="submit" value="Edit Passage"/>
 	</div>
 </form>
