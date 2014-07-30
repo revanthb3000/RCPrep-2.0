@@ -18,6 +18,20 @@ def index():
         redirect(URL('passages','solvePassage'))
     return dict()
 
+def aboutUs():
+    response.view = "default/aboutUs.html"
+    response.title = "About Us"
+    return dict()
+
+def contactUs():
+    response.view = "default/contactUs.html"
+    response.title = "Contact Us"
+    return dict()
+
+def updates():
+    response.view = "default/updates.html"
+    response.title = "Updates"
+    return dict()
 
 def user():
     """

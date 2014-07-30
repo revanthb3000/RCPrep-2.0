@@ -41,8 +41,10 @@ def _():
         (SPAN('Your Passages'), False, '', [
             (T('Submit Passage'), False, URL('passages','submitPassage')),
             (T('View Submitted Passages'), False, URL('passages','viewSubmittedPassages'))
+            ]),
+        (T('About Us'), False, URL('default', 'aboutUs'), []),
+        (T('Contact Us'), False, URL('default', 'contactUs'), [])
         ]
-     )]
 if DEVELOPMENT_MENU: _()
 
 if "auth" in locals(): auth.wikimenu() 
