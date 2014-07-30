@@ -141,3 +141,11 @@ def getQuestionInputHtmlCode(questionNumber, question, optionA, optionB, optionC
     htmlCode += "<option value='E' " + ("selected" if(answer=="E") else "") + ">E</option>\n"
     htmlCode += "</select><br/><br/>\n"
     return htmlCode
+
+def correctNewLineCharsPassages(db):
+    i = 1
+    numOfPassages = databaseQueries.getNumberOfPassages(db)
+    while(i<=numOfPassages):
+        passageContent = databaseQueries.getPassage(db, i)
+        databaseQueries.updatePassage(db, i, passageContent.replace("\n", "<br/>"))
+        i += 1

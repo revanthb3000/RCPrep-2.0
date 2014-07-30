@@ -47,6 +47,14 @@ def getPassage(db, passageId):
     return content
 
 """
+This function updates a passage's contents.
+"""
+def updatePassage(db, passageId, newContent):
+    row = db(db.passages.id==passageId).select().first()
+    row.content = newContent
+    row.update_record()
+
+"""
 Adds a passage to the DB and returns the passageId
 """
 def addPassage(db, passageContent):
