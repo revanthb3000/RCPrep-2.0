@@ -65,7 +65,7 @@ def passageResults():
 
     passageContent = databaseQueries.getPassage(db, passageId)
     questionContent = utilityFunctions.getResultsReviewHTMLCode(db, passageId, answers)
-    resultsContent = utilityFunctions.getResultsHTMLCode(db, passageId, answers)
+    resultsContent = utilityFunctions.getResultsHTMLCode(db, passageId, answers, elapsedTimeStr)
     utilityFunctions.updateStats(db, passageId, userId, elapsedTime.seconds, answers)
 
     return dict(passageContent = passageContent, questionContent = questionContent, resultsContent = resultsContent, elapsedTime = elapsedTimeStr)

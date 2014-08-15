@@ -101,9 +101,15 @@ This function is used to insert entries into the submittedAnswers table.
 def insertAnswerStats(db, questionId, userId, givenAnswer):
     db.submittedAnswers.insert(questionId = questionId, userId = userId, givenAnswer = givenAnswer)
     
+"""
+This function inserts a user passage mapping when that user adds a passage.
+"""
 def insertUserPassageMapping(db, userId, passageId):
     db.authorPassageMapping.insert(passageId = passageId, userId = userId)
-    
+
+"""
+Given a userId, the list of passages submitted by a user is returned.
+"""
 def getUserSubmittedPassages(db, userId):
     rows = db(db.authorPassageMapping.userId == userId).select()
     passageIds = []

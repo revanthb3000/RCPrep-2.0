@@ -1,5 +1,28 @@
 {{extend 'layout.html'}}
 
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          ['A', 11],
+          ['B', 2],
+          ['C', 2],
+          ['D', 2],
+          ['E', 7]
+        ]);
+
+        var options = {
+          legend: 'none'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+        chart.draw(data, options);
+      }
+    </script>
+
 <div align="center">
 {{=XML(resultsContent)}}
 </div>
@@ -8,9 +31,7 @@
 	<table>
 		<tr>
 			<td>Passage</td>
-			<td>Questions
-			<div id="timeTaken">Time Taken : {{=elapsedTime}}</div>
-			</td>
+			<td>Questions</td>
 		</tr>
 		<tr>
 			<td>
