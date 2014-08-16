@@ -106,25 +106,81 @@ Given a passageId, the average score is returned.
 """
 def getAverageScore(db, passageId):
     rows = db(db.passageStats.passageId == passageId).select()
-    count = len(db(db.passageStats.passageId == passageId).select())
+    count = len(rows)
+    if(count == 0):
+        count = 1
     total = 0
     for row in rows:
         total += row.score
     average = float(total)/float(count)
     return average
-
  
 """
 Given a passageId, the average time taken is returned.
 """
 def getAverageTime(db, passageId):
     rows = db(db.passageStats.passageId == passageId).select()
-    count = len(db(db.passageStats.passageId == passageId).select())
+    count = len(rows)
+    if(count == 0):
+        count = 1
     total = 0
     for row in rows:
         total += row.timeTaken
     average = float(total)/float(count)
     return average
+
+"""
+Given a passageId, the number of attempts at solving this passage is returned.
+"""
+def getNumberOfAttempts(db, passageId):
+    rows = db(db.passageStats.passageId == passageId).select()
+    count = len(rows)
+    return count
+
+"""
+Given a questionId, the answer distribution is returned.
+"""
+def getAnswerDistribution(db, questionId):
+    rows = db(db.submittedAnswers.questionId == questionId).select()
+    aCount = 0
+    bCount = 0
+    cCount = 0
+    dCount = 0
+    eCount = 0
+    noneCount = 0
+    for row in rows:
+        if(row.givenAnswer=="A"):
+            aCount += 1
+        if(row.givenAnswer=="B"):
+            bCount += 1
+        if(row.givenAnswer=="C"):
+            cCount += 1
+        if(row.givenAnswer=="D"):
+            dCount += 1
+        if(row.givenAnswer=="E"):
+            eCount += 1
+        else:
+            noneCount += 1
+
+    answerDict = {}
+    answerDict["A"] = aCount
+    answerDict["B"] = bCount
+    answerDict["C"] = cCount
+    answerDict["D"] = dCount
+    answerDict["E"] = eCount
+    answerDict["N/A"] = noneCount
+    return answerDict
+
+"""
+Given a passageId, the answer distributions of each of its questions are returned.
+"""
+def getPassageQuestionAnswerDistribution(db, passageId):
+    answerDicts = []
+    rows = getQuestions(db, passageId)
+    for row in rows:
+        questionId = row.id
+        answerDicts.append(getAnswerDistribution(db, questionId))
+    return answerDicts
     
 """
 This function inserts a user passage mapping when that user adds a passage.

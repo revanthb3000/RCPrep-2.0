@@ -5,21 +5,28 @@
       google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawChart);
       function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['Task', 'Hours per Day'],
-          ['A', 11],
-          ['B', 2],
-          ['C', 2],
-          ['D', 2],
-          ['E', 7]
-        ]);
-
-        var options = {
-          legend: 'none'
-        };
-
-        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-        chart.draw(data, options);
+    	{{
+    		count = 1
+    		for answerDict in answerDicts:
+    			idName = "question" + str(count) + "Chart"
+    	}}
+	        var data = google.visualization.arrayToDataTable([['Option', 'Percentage'],
+			          ['A', {{=answerDict["A"]}}],
+			          ['B', {{=answerDict["B"]}}],
+			          ['C', {{=answerDict["C"]}}],
+			          ['D', {{=answerDict["D"]}}],
+			          ['E', {{=answerDict["E"]}}],
+			          ['N/A', {{=answerDict["N/A"]}}]
+	        	]);
+	
+	        var options = {legend: 'none'};
+	
+	        var chart = new google.visualization.PieChart(document.getElementById('{{=idName}}'));
+	        chart.draw(data, options);
+        {{
+        	count += 1
+        	pass
+        }}
       }
     </script>
 

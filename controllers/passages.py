@@ -64,11 +64,13 @@ def passageResults():
         answers += [request.vars[questionId]]
 
     passageContent = databaseQueries.getPassage(db, passageId)
-    questionContent = utilityFunctions.getResultsReviewHTMLCode(db, passageId, answers)
-    resultsContent = utilityFunctions.getResultsHTMLCode(db, passageId, answers, elapsedTimeStr)
+    numberOfAttempts = databaseQueries.getNumberOfAttempts(db, passageId)
+    questionContent = utilityFunctions.getResultsReviewHTMLCode(db, passageId, answers, numberOfAttempts)
+    resultsContent = utilityFunctions.getResultsHTMLCode(db, passageId, answers, elapsedTimeStr, numberOfAttempts)
     utilityFunctions.updateStats(db, passageId, userId, elapsedTime.seconds, answers)
+    answerDicts = databaseQueries.getPassageQuestionAnswerDistribution(db, passageId)
 
-    return dict(passageContent = passageContent, questionContent = questionContent, resultsContent = resultsContent, elapsedTime = elapsedTimeStr)
+    return dict(passageContent = passageContent, questionContent = questionContent, resultsContent = resultsContent, elapsedTime = elapsedTimeStr, answerDicts = answerDicts)
 
 @auth.requires_login()
 def submitPassage():

@@ -3,6 +3,7 @@
 from gluon import *
 import random
 import databaseQueries
+import time
 
 def checkIfVariableIsInt(var):
     try:
@@ -30,7 +31,7 @@ def getQuestionsHTMLCode(db, passageId):
         count += 1
     return htmlCode
 
-def getResultsHTMLCode(db, passageId, answers, elapsedTime):
+def getResultsHTMLCode(db, passageId, answers, elapsedTime, numberOfAttempts):
     htmlCode = ""
     htmlCode += "<table class='ResultTable'>\n"
     htmlCode += "<tr><td>Question</td>\n"
@@ -60,10 +61,15 @@ def getResultsHTMLCode(db, passageId, answers, elapsedTime):
     htmlCode += "</table><br/>\n"    
     
     htmlCode += "<div align='center'>Time Taken : <b>" + elapsedTime + "</b></div>"
-    htmlCode += "<div align='center'>Your total score is : <b>" + str(numCorrect) + "/" + str(count-1) + " </b></div><br/>"
+    htmlCode += "<div align='center'>Your total score is : <b>" + str(numCorrect) + "/" + str(count-1) + " </b></div>"
+    if(numberOfAttempts>20):
+        averageNumOfSeconds = databaseQueries.getAverageTime(db, passageId)
+        htmlCode += "<div align='center'>Average Time Taken : <b>" + str(time.strftime('%M:%S',time.gmtime(averageNumOfSeconds))) + "</b></div>"
+        htmlCode += "<div align='center'>Average Score : <b>" + str(databaseQueries.getAverageScore(db, passageId)) + " </b></div>"
+    htmlCode += "<br/>"
     return htmlCode
 
-def getResultsReviewHTMLCode(db, passageId, answers):
+def getResultsReviewHTMLCode(db, passageId, answers, numberOfAttempts):
     htmlCode = ""
     questions = databaseQueries.getQuestions(db, passageId)
     count = 1
@@ -107,7 +113,10 @@ def getResultsReviewHTMLCode(db, passageId, answers):
         htmlCode += "<b>(E)</b> " + (question.optionE if question.optionE!="" else "---")
         htmlCode+="</font>"
         
-        htmlCode += "<div id='question" + str(count) + "Chart' style='width: 200px; height: 200px;'></div><br/>"
+        if(numberOfAttempts>20):
+            htmlCode += "<div id='question" + str(count) + "Chart' style='width: 200px; height: 200px;'></div><br/>"
+        else:
+            htmlCode += "<br/><br/>"
 
         count += 1
     return htmlCode
