@@ -102,6 +102,31 @@ def insertAnswerStats(db, questionId, userId, givenAnswer):
     db.submittedAnswers.insert(questionId = questionId, userId = userId, givenAnswer = givenAnswer)
     
 """
+Given a passageId, the average score is returned.
+"""
+def getAverageScore(db, passageId):
+    rows = db(db.passageStats.passageId == passageId).select()
+    count = len(db(db.passageStats.passageId == passageId).select())
+    total = 0
+    for row in rows:
+        total += row.score
+    average = float(total)/float(count)
+    return average
+
+ 
+"""
+Given a passageId, the average time taken is returned.
+"""
+def getAverageTime(db, passageId):
+    rows = db(db.passageStats.passageId == passageId).select()
+    count = len(db(db.passageStats.passageId == passageId).select())
+    total = 0
+    for row in rows:
+        total += row.timeTaken
+    average = float(total)/float(count)
+    return average
+    
+"""
 This function inserts a user passage mapping when that user adds a passage.
 """
 def insertUserPassageMapping(db, userId, passageId):

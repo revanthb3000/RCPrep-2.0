@@ -30,7 +30,13 @@ def getQuestionsHTMLCode(db, passageId):
         count += 1
     return htmlCode
 
-def getResultsHTMLCode(db, passageId, answers):
+def getResultsHTMLCode(db, passageId, answers, elapsedTime):
+    htmlCode = ""
+    htmlCode += "<table class='ResultTable'>\n"
+    htmlCode += "<tr><td>Question</td>\n"
+    htmlCode += "<td>Your Answer</td>\n"
+    htmlCode += "<td>Correct Answer</td>\n"
+    htmlCode += "<td>Result</td></tr>\n"
     questions = databaseQueries.getQuestions(db, passageId)
     count = 1
     numCorrect = 0
@@ -42,9 +48,19 @@ def getResultsHTMLCode(db, passageId, answers):
         isCorrect = True if(correctAnswer == givenAnswer) else False
         if(isCorrect):
             numCorrect += 1
+        score = str(IMG(_src= URL('static','images/correct.png'),_alt="Correct") if(isCorrect) else IMG(_src= URL('static','images/wrong.png'),_alt="Wrong"))
+
+        htmlCode += "<tr>\n"
+        htmlCode += "<td>" + str(count) + "</td>\n"
+        htmlCode += "<td>" + givenAnswer + "</td>\n"
+        htmlCode += "<td>" + correctAnswer + "</td>\n"
+        htmlCode += "<td>" + score + "</td>\n"
+        htmlCode += "</tr>\n"
         count += 1
-    htmlCode = "<div align='center'>Your total score is : <b>" + str(numCorrect) + "/" + str(count-1) + " </b></div><br/>"
-    htmlCode += "<div align='center'>Time Taken : {{=elapsedTime}}</div>"
+    htmlCode += "</table><br/>\n"    
+    
+    htmlCode += "<div align='center'>Time Taken : <b>" + elapsedTime + "</b></div>"
+    htmlCode += "<div align='center'>Your total score is : <b>" + str(numCorrect) + "/" + str(count-1) + " </b></div><br/>"
     return htmlCode
 
 def getResultsReviewHTMLCode(db, passageId, answers):
@@ -91,7 +107,7 @@ def getResultsReviewHTMLCode(db, passageId, answers):
         htmlCode += "<b>(E)</b> " + (question.optionE if question.optionE!="" else "---")
         htmlCode+="</font>"
         
-        htmlCode += "<div id='piechart' style='width: 200px; height: 200px;'></div><br/>"
+        htmlCode += "<div id='question" + str(count) + "Chart' style='width: 200px; height: 200px;'></div><br/>"
 
         count += 1
     return htmlCode
