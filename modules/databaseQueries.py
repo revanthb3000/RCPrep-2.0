@@ -197,3 +197,26 @@ def getUserSubmittedPassages(db, userId):
     for row in rows:
         passageIds.append(int(row.passageId))
     return passageIds
+
+"""
+This function will return the number of registered users
+"""
+def getNumberOfUsers(db): 
+    rows = db(db.auth_user.id != 0).select()
+    return len(rows)
+
+"""
+Gets a user distribution based on countries.
+"""
+def getUserDistribution(db):
+    count = db.auth_user.id.count()
+    result = db().select(db.auth_user.Location, count, groupby = db.auth_user.Location)
+    return result
+
+"""
+The number of passage instances solved after a given time.
+"""
+def getNumberOfPassageInstancesSolved(db, time):
+    rows = db(db.passageStats.timeOfSubmission >= time).select()
+    count = len(rows)
+    return count

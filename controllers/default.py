@@ -33,6 +33,17 @@ def updates():
     response.title = "Updates"
     return dict()
 
+def statsForMyViewOnly():
+    string = ""
+    rows = databaseQueries.getUserDistribution(db)
+    for row in rows:
+        string += "<br/>Number of people from " + str(row.auth_user.Location) + " = " + str(row._extra["COUNT(auth_user.id)"]) 
+    fromDate = datetime.datetime.now() - datetime.timedelta(hours=24)
+    string += "<br/> Number of Passage Instances Solved in the last 24 hours = " + str(databaseQueries.getNumberOfPassageInstancesSolved(db, fromDate))
+    string += "<br/> Number of Users = " + str(databaseQueries.getNumberOfUsers(db))
+    response.view = ""
+    return string
+
 def user():
     """
     exposes:
