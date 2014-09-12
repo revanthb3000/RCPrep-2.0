@@ -220,3 +220,20 @@ def getNumberOfPassageInstancesSolved(db, time):
     rows = db(db.passageStats.timeOfSubmission >= time).select()
     count = len(rows)
     return count
+
+"""
+Given a userId, thje list of passages solved by the user and the time taken is returned.
+"""
+def getPassageHistory(db, userId):
+    rows = db(db.passageStats.userId == userId).select()
+    return rows
+
+"""
+Given a passages list, this function will return a mapping of passageId to number of questions.
+"""
+def getNumberOfQuestionsPassageList(db, passageList):
+    rows = db(db.questions.passageId.belongs(passageList)).select(db.questions.passageId, db.questions.id.count(), groupby=db.questions.passageId)
+    passageQuestionNumberMapping = {}
+    for row in rows:
+        passageQuestionNumberMapping[int(row.questions.passageId)] = int(row._extra["COUNT(questions.id)"])
+    return passageQuestionNumberMapping

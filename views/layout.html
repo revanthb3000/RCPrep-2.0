@@ -37,6 +37,7 @@
 
   <!-- All JavaScript at the bottom, except for Modernizr which enables
        HTML5 elements & feature detects -->
+  
   <script src="{{=URL('static','js/modernizr.custom.js')}}"></script>
 
   <!-- include stylesheets -->
@@ -71,6 +72,7 @@
 </head>
 
 <body>
+	{{include 'tracking.html'}}
   <!-- Navbar ================================================== -->
   <div class="navbar navbar-inverse">
     <div class="flash">{{=response.flash or ''}}</div>
@@ -90,7 +92,8 @@
             <li class="dropdown"> <a class="dropdown-toggle" data-toggle="dropdown" href="{{=URL('users','profile',vars=dict(userId = auth.user.id))}}">{{=auth.user.first_name}} </a>
                 <ul class="dropdown-menu">
 <!--                     <li><a href="{{=URL('users','editProfile')}}" rel="nofollow"><i class="icon icon-user glyphicon glyphicon-user"></i>Edit Profile</a></li>  -->
-                    <li><a href="{{=URL('users','changePassword')}}" rel="nofollow"><i class="icon icon-lock glyphicon glyphicon-lock"></i>Change Password</a></li><li class="divider"></li>
+                    <li><a href="{{=URL('users','changePassword')}}" rel="nofollow"><i class="icon icon-lock glyphicon glyphicon-lock"></i> Change Password</a></li>
+                    <li><a href="{{=URL('users','passageHistory')}}" rel="nofollow"><i class="icon icon-time glyphicon glyphicon-time"></i> Passage History</a></li>
                     <li><a href="{{=URL('users','logout')}}"><i class="icon icon-off glyphicon glyphicon-off"></i> Logout</a></li>
                 </ul>
             </li>
@@ -191,7 +194,6 @@
   });</script>
   {{pass}}
 
-  {{include 'tracking.html'}}
   <script src="{{=URL('static','js/share.js',vars=dict(static=URL('static','images')))}}"></script>
 </body>
 </html>

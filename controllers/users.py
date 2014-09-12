@@ -55,3 +55,17 @@ def logout():
         auth.logout()
     redirect(URL('default','index'))
     return dict()
+
+@auth.requires_login()
+def passageHistory():
+    userId = auth.user.id
+    response.view = 'users/passageHistory.html'
+    response.title = "Solved Passage History"
+    rows = databaseQueries.getPassageHistory(db, userId)
+    
+    solvedPassages = []
+    for row in rows:
+        if(not(row.passageId in solvedPassages)):
+            solvedPassages.append(row.passageId)
+    passageQuestionNumberMapping = databaseQueries.getNumberOfQuestionsPassageList(db, solvedPassages)
+    return dict(results = rows, passageQuestionNumberMapping = passageQuestionNumberMapping)

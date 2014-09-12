@@ -1,0 +1,25 @@
+{{extend 'layout.html'}}
+
+<div align="center">
+<table class='ResultTable'>
+<tr><td>#</td><td>Your Score</td><td>Maximum Score</td><td>Time Taken</td></tr>
+	{{
+		count = 1
+		for result in results:
+			passageId = int(result.passageId)
+			numOfSeconds = int(result.timeTaken)
+			timeTaken = (str(numOfSeconds/60) + " minutes " + str(numOfSeconds%60) + " seconds") if (numOfSeconds>=60) else (str(numOfSeconds) + " seconds")
+	}}
+	<tr>
+		<td><a href = "{{=URL('passages','solvePassage',vars=dict(passageId = result.passageId))}}">{{=count}}</a></td>
+		<td>{{=result.score}}</td>
+		<td>{{=passageQuestionNumberMapping[passageId]}}</td>
+		<td>{{=timeTaken}}</td>
+	</tr>
+	{{
+		count += 1
+		pass
+	}}
+</table>
+
+</div>

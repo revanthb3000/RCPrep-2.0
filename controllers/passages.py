@@ -58,6 +58,7 @@ def passageResults():
     elapsedTimeStr = str(elapsedTimeStr.split(":")[1]) + ":" + str(elapsedTimeStr.split(":")[2].split(".")[0])
     
     numberOfQuestions = databaseQueries.getNumberOfQuestions(db, passageId)
+    #TODO : Check args and bypass this loop
     answers = []
     for i in range(1, numberOfQuestions + 1):
         questionId = "question-" + str(i)
