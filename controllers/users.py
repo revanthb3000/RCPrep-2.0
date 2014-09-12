@@ -67,5 +67,6 @@ def passageHistory():
     for row in rows:
         if(not(row.passageId in solvedPassages)):
             solvedPassages.append(row.passageId)
+    
     passageQuestionNumberMapping = databaseQueries.getNumberOfQuestionsPassageList(db, solvedPassages)
-    return dict(results = rows, passageQuestionNumberMapping = passageQuestionNumberMapping)
+    return dict(results = rows, passageQuestionNumberMapping = passageQuestionNumberMapping, numberOfSolvedPassages = len(solvedPassages))
