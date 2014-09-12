@@ -29,6 +29,16 @@
         }}
       }
     </script>
+    
+    <div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=155359177889157&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+    
 
 <div align="center">
 {{=XML(resultsContent)}}
@@ -61,8 +71,11 @@
 	<font style='BACKGROUND-COLOR: #ED534F'>  &nbsp &nbsp </font>&nbsp - represents your answer which was wrong.<br/>
 	<font style='BACKGROUND-COLOR: #73D549'>  &nbsp &nbsp  </font> &nbsp - represents your answer which was correct.<br/>
 	<font style='BACKGROUND-COLOR: #F7E259'>  &nbsp &nbsp </font> &nbsp - represents the correct answer.<br/>
+	Liked the passage ? Share it with others : 
+	<input type="text" value="{{=URL('passages','solvePassage',vars=dict(passageId = request.vars.passageId), scheme = True)}}" readonly/>
 	<br/>
 	<div class="SmallButton">
 		<a href="{{=URL('passages','solvePassage')}}" >Click here to solve another passage</a>
 	</div>
 </div>
+
