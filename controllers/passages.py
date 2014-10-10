@@ -28,6 +28,7 @@ def solvePassage():
         passageId = utilityFunctions.getRandomNumber(1, numberOfPassages)
 
     passageContent = databaseQueries.getPassage(db, passageId)
+    passageContent = passageContent.replace("\n","<br/><br/>")
     questionContent = utilityFunctions.getQuestionsHTMLCode(db, passageId)
     numberOfQuestions = databaseQueries.getNumberOfQuestions(db, passageId)
     fields = []
